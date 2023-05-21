@@ -1,0 +1,72 @@
+{% extends 'dummy.html' %}
+
+{% block title %}
+	{% if form.instance.empid %}
+	<title>Emp Update</title>
+	{% else %}
+	<title>Emp Create</title>
+	{% endif %}
+	{% endblock %}
+
+{% block content %}
+<style>
+	label{
+		font-weight: bold;
+	}
+	#id_gender{
+		display: inline-flex;
+		gap: 10px;
+	}
+	span{
+		color: red;
+	}
+</style>
+<div class="col-lg-6 offset-lg-3 my-3">
+	{% if form.instance.empid %}
+	<h3>Employee Updation Form</h3>
+	{% else %}
+	<h3>Employee Creation Form</h3>
+	{% endif %}
+	<hr>
+	<form method="POST" class="border p-3 rounded-lg border-danger">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-lg-6">
+				<label>Employee Id:</label>{{form.empid}}
+				<span>{{data.errors.empid}}</span>
+			</div>
+			<div class="col-lg-6">
+				<label>Employee Name:</label>{{form.name}}
+				<span>{{data.errors.name}}</span>
+			</div>
+		</div>
+		<label>Employee Email:</label>{{form.email}}
+		<div class="row">
+			<div class="col-lg-6">
+				<label>Employee Age:</label>{{form.age}}
+				<span>{{data.errors.age}}</span>
+			</div>
+			<div class="col-lg-6">
+				<label>Employee Mobile:</label>{{form.mobile}}
+				<span>{{data.errors.mobile}}</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+				<label class="d-block">Employee Gender:</label>{{form.gender}}
+			</div>
+			<div class="col-lg-6">
+				<label>Employee City:</label>{{form.city}}
+			</div>
+		</div>
+		<label>Employee Position:</label>{{form.position}}
+		{% if form.instance.empid %}
+		<input type="submit" value="Update" class="my-3 btn btn-success">
+		<a href="{% url 'emp_display' %}" class="btn btn-warning ml-5">Go Back</a>
+		{% else %}
+		<input type="submit" value="Insert" class="my-3 btn btn-primary">
+		<a href="{% url 'emp_display' %}" class="btn btn-warning ml-5">View Emp Details</a>
+		{% endif %}
+	</form>
+</div>
+{% endblock %}

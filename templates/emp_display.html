@@ -1,0 +1,115 @@
+{% extends 'dummy.html' %}
+
+{% block title %}
+	<title>Emp Details</title>
+	{% endblock %}
+
+{% block content %}
+<style>
+	label{
+		font-weight: bold;
+		margin-right: 10px;
+		margin-top: 3px;
+		font-size: 20px;
+	}
+	.div{
+		display: flex;
+		margin-top: 10px;
+		align-items: center;
+		justify-content: space-between;
+
+	}
+	.fo{
+		display: inline-flex;
+		gap: 10px;
+	}
+</style>
+<div class="col-lg-10 offset-lg-1">
+<div class="div">
+	<a href="{% url 'emp_form' %}" class="btn btn-primary my-3">Add New Employee</a>
+	<form method="GET" action="/search" class="fo">
+		<input type="search" name="search" class="form-control" placeholder="Search" id="search">
+		<input type="submit" class="btn btn-outline-primary btn-sm">
+	</form>
+	<form method="GET" action="/filter_data" class="my-3 fo">
+	<label>Filter:</label>{{form.position}}
+	<input type="submit" class="btn btn-outline-success btn-sm">
+	</form>
+	
+</div>
+{% for msg in messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{msg}}</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endfor %}
+{% if pages %}
+<table class="table table-bordered">
+	<tr class="table-warning">
+		<th>Id</th>
+		<th>Name</th>
+		<th>Age</th>
+		<th>Email</th>
+		<th>Mobile</th>
+		<th>Gender</th>
+		<th>Position</th>
+		<th>Update</th>
+		<th>Delete</th>
+	</tr>
+	{% for i in pages %}
+	<tr>
+		<td>{{i.empid}}</td>
+		<td>{{i.name}}</td>
+		<td>{{i.age}}</td>
+		<td>{{i.email}}</td>
+		<td>{{i.mobile}}</td>
+		<td>{{i.gender}}</td>
+		<td>{{i.position}}</td>
+		<td><a href="{% url 'emp_update' i.empid %}" class="btn btn-warning btn-sm">Update</a></td>
+		<td><a href="{% url 'emp_delete' i.empid %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure to delete {{i.name}} details?')">Delete</a></td>
+	</tr>
+	{% endfor %}
+</table>
+{% else %}
+<h4>Data not available</h4>
+{% endif %}
+</div>
+<!--
+{{pages}}<br>
+Previous :{{pages.has_previous}}<br>
+Next :{{pages.has_next}}<br>
+Current :{{pages.number}}<br>
+No.of pages :{{pages.paginator.num_pages}}
+-->
+<div class="text-center">
+{% if pages.has_previous %}
+<a href="?page=1" class="btn btn-success btn-sm">First</a>
+<a href="?page={{pages.previous_page_number}}" class="btn btn-success btn-sm">Previous</a>
+{% else %}
+<a href="" class="btn btn-success btn-sm disabled">Previous</a>
+{% endif %}
+
+Page {{pages.number}} of {{pages.paginator.num_pages}}
+
+{% if pages.has_next %}
+<a href="?page={{pages.next_page_number}}" class="btn btn-info btn-sm">Next</a>
+<a href="?page={{pages.paginator.num_pages}}" class="btn btn-info btn-sm">Last</a>
+{% else %}
+<a href="" class="btn btn-info btn-sm disabled">Next</a>
+{% endif %}
+
+</div>
+
+
+<script>
+  $( function() {
+
+    $( "#search" ).autocomplete({
+      source: "{% url 'autocomplete' %}",
+      minLength:2
+    });
+  } );
+  </script>
+{% endblock %}
